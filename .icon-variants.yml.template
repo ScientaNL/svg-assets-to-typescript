@@ -1,0 +1,2 @@
+action/preset.svg:
+  dark: { --main-color: "#aaa", --secondary-color: "#333" }

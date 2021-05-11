@@ -1,0 +1,2 @@
+icon-lib/test.svg:
+  dark: { --main-color: "#ccddcc", --secondary-color: "#ddeeff" }

@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  node:
+    container_name: svg-assets-to-typescript
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    environment:
+      NODE_ENV: development
+    env_file:
+      - .env
+    command: "tail -f /dev/null"
+    volumes:
+      - ${ASSETS_DIR}:/assets
+      - ${OUTPUT_DIR}:/output
+      - ./:/home/node/app

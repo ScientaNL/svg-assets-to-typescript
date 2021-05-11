@@ -1,0 +1,51 @@
+inputs:
+  - .
+variants:
+  path: .icon-variants.yml
+  autoAddMonoVariant: true
+  monoVariantName: mono
+parser:
+  cssVariableAttribute: serif:id
+  cssVariableRegex: (--[a-z0-9-_]+)\b
+  svgoPlugins:
+    - removeDoctype
+    - removeXMLProcInst
+    - removeComments
+    - removeMetadata
+    - removeEditorsNSData
+    - cleanupAttrs
+    - mergeStyles
+    - inlineStyles
+    - minifyStyles
+    - cleanupIDs
+    - removeUselessDefs
+    - cleanupNumericValues
+    - convertColors
+    - removeUnknownsAndDefaults
+    - removeNonInheritableGroupAttrs
+    - removeUselessStrokeAndFill
+    - removeViewBox
+    - cleanupEnableBackground
+    - removeHiddenElems
+    - removeEmptyText
+    - convertShapeToPath
+    - convertEllipseToCircle
+    - moveElemsAttrsToGroup
+    - moveGroupAttrsToElems
+    - collapseGroups
+    - convertPathData
+    - convertTransform
+    - removeEmptyAttrs
+    - removeEmptyContainers
+    - mergePaths
+    - removeUnusedNS
+    - sortDefsChildren
+    - removeTitle
+    - removeDesc
+  js2svg:
+    pretty: false
+writer:
+  constPrefix: scaIcon
+  assetTypeName: scaIcon
+  assetInterfaceName: ScaIcon
+  variantInterfaceName: ScaIconVariant
