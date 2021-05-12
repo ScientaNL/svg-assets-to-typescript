@@ -5,7 +5,7 @@ import * as jsesc from 'jsesc';
 import { ConfigInterface } from "./ConfigInterface";
 import { VariantsInterface } from "./VariantListInterface";
 
-type AssetType = { name: string, svg: string, variants?: VariantsInterface };
+type AssetType = { name: string, path: string, svg: string, variants?: VariantsInterface };
 type AssetMapType = Map<string, AssetType>;
 
 export class TypescriptModelWriter {
@@ -24,6 +24,7 @@ export class TypescriptModelWriter {
 
 		const data: AssetType = {
 			name: assetName,
+			path: imagePath,
 			svg: svg.trim()
 		};
 
@@ -47,8 +48,14 @@ export class TypescriptModelWriter {
 			{
 				assets: this.map,
 				config: this.config,
-				serialize: (value: any) => {
-					const serialized = jsesc(value, {compact: false, quotes: "backtick", "indent": '  '});
+				serialize: (value: AssetType) => {
+					value = {...value};
+					delete value.path;
+
+					const serialized = jsesc(
+						value,
+						{compact: false, quotes: "backtick", "indent": '  '}
+					);
 					return serialized.replaceAll(
 						/`(.*?)`(?=:\s{0,1}(?:true|false|null|undefined|[\[{"'`]|[0-9]))/g,
 						(match, key: string) => {
