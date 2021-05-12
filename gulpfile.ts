@@ -19,7 +19,8 @@ const {config, variants} = configLoader(rcFilePath, projectRootPath);
 process.chdir(projectRootPath);
 
 exports.default = () => src(
-	config.inputs.map((input) => `${resolve(projectRootPath, input)}/**/*.svg`)
+	config.inputs.map((input) => `${resolve(projectRootPath, input)}/**/*.svg`),
+	{base: projectRootPath}
 ).pipe(
 	plumber()
 ).pipe(

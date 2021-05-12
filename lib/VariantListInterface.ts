@@ -1,6 +1,6 @@
 import { object, string } from 'joi';
 
-export interface IconsVariantsInterface {
+export interface AssetsVariantsInterface {
 	[index: string]: VariantsInterface;
 }
 

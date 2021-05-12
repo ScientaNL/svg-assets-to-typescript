@@ -1,21 +1,21 @@
 import { ConfigInterface } from "./ConfigInterface";
-import { IconsVariantsInterface, VariantsInterface, VariantType } from "./VariantListInterface";
+import { AssetsVariantsInterface, VariantsInterface, VariantType } from "./VariantListInterface";
 
 export class VariantsManager {
 
 	constructor(
 		private readonly variantsConfig: ConfigInterface["variants"],
-		private readonly variants: IconsVariantsInterface,
+		private readonly variants: AssetsVariantsInterface,
 		private readonly logger?: (file, message) => void
 	) {
 	}
 
-	public getVariants(iconPath: string): VariantsInterface | null {
-		return this.variants[iconPath] || null;
+	public getVariants(assetPath: string): VariantsInterface {
+		return this.variants[assetPath] || {};
 	}
 
 	public getProcessedVariants(
-		iconPath: string,
+		assetPath: string,
 		referenceVariant: VariantType
 	): VariantsInterface | null {
 		const referenceVariables = Object.keys(referenceVariant);
@@ -24,7 +24,7 @@ export class VariantsManager {
 			return null;
 		}
 
-		const storedVariants = this.getVariants(iconPath);
+		const storedVariants = this.getVariants(assetPath);
 		const mergedVariants = {};
 
 		variantLoop:
@@ -34,7 +34,7 @@ export class VariantsManager {
 				if (variables[referenceVariable]) {
 					mergedVariant[referenceVariable] = variables[referenceVariable];
 				} else {
-					this.logger?.(iconPath, `Could not find ${referenceVariable} on ${variant}. Skipping variant.`);
+					this.logger?.(assetPath, `Could not find ${referenceVariable} on ${variant}. Skipping variant.`);
 					continue variantLoop;
 				}
 			}

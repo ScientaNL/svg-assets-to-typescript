@@ -2,12 +2,12 @@ import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { parse as parseYaml } from "yaml";
 import { ConfigInterface, configValidator } from "./ConfigInterface";
-import { IconsVariantsInterface, variantListValidator } from "./VariantListInterface";
+import { AssetsVariantsInterface, variantListValidator } from "./VariantListInterface";
 
 export const configLoader = (
 	configFile: string,
 	projectRootPath: string
-): { config: ConfigInterface, variants: IconsVariantsInterface } => {
+): { config: ConfigInterface, variants: AssetsVariantsInterface } => {
 	if (!existsSync(configFile)) {
 		throw new Error(`Could not find rcFile '${configFile}'`);
 	}
@@ -32,7 +32,7 @@ export const configLoader = (
 	};
 };
 
-const variantsLoader = (variantsFile: string): IconsVariantsInterface => {
+const variantsLoader = (variantsFile: string): AssetsVariantsInterface => {
 	if (!existsSync(variantsFile)) {
 		throw new Error(`Could not find variantsFile '${variantsFile}'`);
 	}

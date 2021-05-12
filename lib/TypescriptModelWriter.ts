@@ -18,12 +18,12 @@ export class TypescriptModelWriter {
 	}
 
 	public add(imagePath: string, svg: string, variants?: VariantsInterface) {
-		const iconNameParts = TypescriptModelWriter.getImageImageNameParts(imagePath);
-		const iconName = iconNameParts.join("-");
-		const constName = `${this.config.constPrefix}_${iconNameParts.join("_")}`;
+		const assetNameParts = TypescriptModelWriter.getImageImageNameParts(imagePath);
+		const assetName = assetNameParts.join("-");
+		const constName = `${this.config.constPrefix}_${assetNameParts.join("_")}`;
 
 		const data: AssetType = {
-			name: iconName,
+			name: assetName,
 			svg: svg.trim()
 		};
 
@@ -45,7 +45,7 @@ export class TypescriptModelWriter {
 		return await renderFile(
 			this.templatePath,
 			{
-				icons: this.map,
+				assets: this.map,
 				config: this.config,
 				serialize: (value: any) => {
 					const serialized = jsesc(value, {compact: false, quotes: "backtick", "indent": '  '});

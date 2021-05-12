@@ -6,7 +6,7 @@ import { Transform } from "stream";
 import { ConfigInterface } from "../ConfigInterface";
 import { SvgParser } from "../SvgParser";
 import { TypescriptModelWriter } from "../TypescriptModelWriter";
-import { IconsVariantsInterface } from "../VariantListInterface";
+import { AssetsVariantsInterface } from "../VariantListInterface";
 import { VariantsManager } from "../VariantsManager";
 
 export class SvgParserPlugin {
@@ -16,7 +16,7 @@ export class SvgParserPlugin {
 		parserConfig: ConfigInterface["parser"],
 		variantsConfig: ConfigInterface["variants"],
 		writerConfig: ConfigInterface["writer"],
-		variants: IconsVariantsInterface
+		variants: AssetsVariantsInterface
 	): Transform {
 		const svgParser = new SvgParser(parserConfig);
 		const variantsManager = new VariantsManager(
