@@ -140,7 +140,7 @@ interface ConfigInterface {
     constPrefix: string; // Name of the constant prefix to use in the definition model
     assetTypeName: string; // Name of the Typescript asset type which will be generated
     assetInterfaceName: string; // Name of the Typescript asset interface which will be generated
-    variantInterfaceName: string; //Name of the Typescript variant type which will be generated
+    variantEnumName: string; //Name of the Typescript variant type which will be generated
   }
 }
 ```

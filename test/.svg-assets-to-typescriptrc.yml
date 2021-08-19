@@ -48,4 +48,4 @@ writer:
   constPrefix: scaIcon
   assetTypeName: scaIcon
   assetInterfaceName: ScaIcon
-  variantInterfaceName: ScaIconVariant
+  variantEnumName: ScaIconVariant

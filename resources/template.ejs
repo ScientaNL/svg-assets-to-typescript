@@ -21,9 +21,11 @@ export type <%- config.assetTypeName %>  =
 export interface <%- config.assetInterfaceName %> {
   name: <%- config.assetTypeName %>;
   svg: string;
-  variants?: Record<string, <%- config.variantInterfaceName %>>
+  variants?: Partial<Record<<%- config.variantEnumName %>, Record<string, string>>>;
 }
 
-export interface <%- config.variantInterfaceName %> {
-  [key: string]: string;
+export enum <%- config.variantEnumName %> {
+	<%_ variantNames.forEach(function(variant){ _%>
+	  <%- variant %> = "<%- variant %>",
+	<%_ }); _%>
 }

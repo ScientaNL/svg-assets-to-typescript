@@ -25,7 +25,7 @@ export class SvgParserPlugin {
 			(fileName: string, message: string) => 	warn(`[svg parser] ${blue(fileName)} - ${red(message)}`)
 		);
 
-		const writer = new TypescriptModelWriter(templatePath, writerConfig);
+		const writer = new TypescriptModelWriter(templatePath, writerConfig, variantsManager.getVariantNames());
 
 		const plugin = new SvgParserPlugin(svgParser, variantsManager, writer, outputPath);
 
