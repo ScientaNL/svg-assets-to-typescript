@@ -14,6 +14,16 @@ export class VariantsManager {
 		return this.variants[assetPath] || {};
 	}
 
+	public getVariantNames() {
+		const variants = Object.values(this.variants).reduce(
+			(names, icon) => names.concat(Object.keys(icon).filter(x => !names.includes(x))), []
+		);
+		if (this.variantsConfig.autoAddMonoVariant) {
+			variants.push(this.variantsConfig.monoVariantName);
+		}
+		return variants;
+	}
+
 	public getProcessedVariants(
 		assetPath: string,
 		referenceVariant: VariantType

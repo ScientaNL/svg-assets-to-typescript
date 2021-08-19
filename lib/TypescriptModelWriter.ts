@@ -13,7 +13,8 @@ export class TypescriptModelWriter {
 
 	constructor(
 		private readonly templatePath: string,
-		private readonly config: ConfigInterface["writer"]
+		private readonly config: ConfigInterface["writer"],
+		private readonly deducedVariantNames: string[]
 	) {
 	}
 
@@ -48,6 +49,7 @@ export class TypescriptModelWriter {
 			{
 				assets: this.map,
 				config: this.config,
+				variantNames: this.deducedVariantNames,
 				serialize: (value: AssetType) => {
 					value = {...value};
 					delete value.path;

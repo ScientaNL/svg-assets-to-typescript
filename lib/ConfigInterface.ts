@@ -17,7 +17,7 @@ export interface ConfigInterface {
 		constPrefix: string;
 		assetTypeName: string;
 		assetInterfaceName: string;
-		variantInterfaceName: string;
+		variantEnumName: string;
 	}
 }
 
@@ -38,6 +38,6 @@ export const configValidator = object({
 		constPrefix: string().required(),
 		assetTypeName: string().required(),
 		assetInterfaceName: string().required(),
-		variantInterfaceName: string().required(),
+		variantEnumName: string().required(),
 	}
 });
