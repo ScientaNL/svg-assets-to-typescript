@@ -6,6 +6,10 @@ export interface ConfigInterface {
 		path: string;
 		autoAddMonoVariant: boolean;
 		monoVariantName: string
+		monoVariableMap: {
+			default: string,
+			[key: string]: string,
+		},
 	},
 	parser: {
 		cssVariableAttribute: string;
@@ -26,7 +30,10 @@ export const configValidator = object({
 	variants: object({
 		path: string().required(),
 		autoAddMonoVariant: boolean().required(),
-		monoVariantName: string().optional()
+		monoVariantName: string().optional(),
+		monoVariableMap: object({
+			default: string().required(),
+		}).pattern(string(), string()),
 	}).optional(),
 	parser: object({
 		cssVariableAttribute: string().required(),

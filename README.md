@@ -129,6 +129,10 @@ interface ConfigInterface {
     path: string; // Path of the variants definition yml
     autoAddMonoVariant: boolean; // Automatically add a mono variant to each asset
     monoVariantName: string // Name of the mono variant variant
+    monoVariableMap: { // The names of variables and the value it must get as a mono variant
+      default: string,
+      [key: string]: string,
+    },
   },
   parser: {
     cssVariableAttribute: string; //Name of the aattribute in which the css variable name is annotated to

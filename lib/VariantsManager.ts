@@ -53,10 +53,13 @@ export class VariantsManager {
 		}
 
 		if (this?.variantsConfig && this.variantsConfig.autoAddMonoVariant) {
+			const variableMap = this.variantsConfig.monoVariableMap;
+
 			const monoVariant = {};
 			for (const referenceVariable of referenceVariables) {
-				monoVariant[referenceVariable] = "currentColor";
+				monoVariant[referenceVariable] = variableMap[referenceVariable] ?? variableMap['default'] ?? "currentColor";
 			}
+
 			mergedVariants[this.variantsConfig.monoVariantName] = monoVariant;
 		}
 
