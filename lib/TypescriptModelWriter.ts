@@ -1,5 +1,5 @@
 import { basename, dirname, join, sep } from "path";
-import { camelCase } from "lodash";
+import { upperFirst } from "lodash";
 import { renderFile } from 'ejs';
 import * as jsesc from 'jsesc';
 import { ConfigInterface } from "./ConfigInterface";
@@ -40,7 +40,10 @@ export class TypescriptModelWriter {
 		return join(
 			dirname(imagePath),
 			basename(imagePath, ".svg")
-		).split(sep).map(camelCase);
+		).split(sep).map((value) => {
+			//Get a camelcase with respect for capitalized parts
+			return value.split(/[-_]/).map((part, i) => i ? upperFirst(part) : part).join("");
+		});
 	}
 
 	public async generate(): Promise<string> {
