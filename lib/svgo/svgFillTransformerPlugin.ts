@@ -27,7 +27,7 @@ export const svgFillTransformerPlugin: CustomPlugin<PluginConfigType> = {
 		}
 
 		ast.attributes.style = ast.attributes.style.replace(
-			/(fill:\s*?)(\#[a-f0-9]{3,8}|[a-z]+|rgba?\([\d, .]+\))(;|$)/img,
+			/(fill:\s*?)(\#[a-f0-9]{3,8}|[a-z]+|rgba?\([\d, .]+\)|url?\(#[a-z0-9_-]+\))(;|$)/img,
 			(match, prefix, color, suffix): string => {
 				if (!defaultVariantMap.hasOwnProperty(cssVariable)) {
 					defaultVariantMap[cssVariable] = color;
