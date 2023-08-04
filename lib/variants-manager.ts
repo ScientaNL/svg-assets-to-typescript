@@ -1,12 +1,11 @@
-import { ConfigInterface } from "./ConfigInterface";
-import { AssetsVariantsInterface, VariantsInterface, VariantType } from "./VariantListInterface";
+import { ConfigInterface } from "./config.interface";
+import { AssetsVariantsInterface, VariantsInterface, VariantType } from "./variant-list.interface";
 
 export class VariantsManager {
-
 	constructor(
 		private readonly variantsConfig: ConfigInterface["variants"],
 		private readonly variants: AssetsVariantsInterface,
-		private readonly logger?: (file, message) => void
+		private readonly logger?: (file, message) => void,
 	) {
 	}
 
@@ -14,11 +13,13 @@ export class VariantsManager {
 		return this.variants[assetPath] || {};
 	}
 
-	public getVariantNames() {
-		const variants = Object.values(this.variants).reduce(
-			(names, icon) => names.concat(Object.keys(icon).filter(x => !names.includes(x))), []
+	public getVariantNames(): string[] {
+		const variants: string[] = Object.values(this.variants).reduce(
+			(names, icon) => names.concat(Object.keys(icon).filter(x => !names.includes(x))),
+			[] as string[],
 		);
-		if (this.variantsConfig.autoAddMonoVariant) {
+
+		if (this.variantsConfig?.autoAddMonoVariant && this.variantsConfig.monoVariantName) {
 			variants.push(this.variantsConfig.monoVariantName);
 		}
 		return variants;
@@ -26,7 +27,7 @@ export class VariantsManager {
 
 	public getProcessedVariants(
 		assetPath: string,
-		referenceVariant: VariantType
+		referenceVariant: VariantType,
 	): VariantsInterface | null {
 		const referenceVariables = Object.keys(referenceVariant);
 

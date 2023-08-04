@@ -1,9 +1,9 @@
-import { basename, dirname, join, sep } from "path";
-import { upperFirst } from "lodash";
 import { renderFile } from 'ejs';
-import * as jsesc from 'jsesc';
-import { ConfigInterface } from "./ConfigInterface";
-import { VariantsInterface } from "./VariantListInterface";
+import { default as jsesc } from 'jsesc';
+import { default as upperFirst } from "lodash.upperfirst";
+import { basename, dirname, join, sep } from "path";
+import { ConfigInterface } from "./config.interface";
+import { VariantsInterface } from "./variant-list.interface";
 
 type AssetType = { name: string, path: string, svg: string, variants?: VariantsInterface };
 type AssetMapType = Map<string, AssetType>;
@@ -14,7 +14,7 @@ export class TypescriptModelWriter {
 	constructor(
 		private readonly templatePath: string,
 		private readonly config: ConfigInterface["writer"],
-		private readonly deducedVariantNames: string[]
+		private readonly deducedVariantNames: string[],
 	) {
 	}
 
@@ -26,7 +26,7 @@ export class TypescriptModelWriter {
 		const data: AssetType = {
 			name: assetName,
 			path: imagePath,
-			svg: svg.trim()
+			svg: svg.trim(),
 		};
 
 		if (variants) {
@@ -39,11 +39,13 @@ export class TypescriptModelWriter {
 	private static getImageImageNameParts(imagePath): string[] {
 		return join(
 			dirname(imagePath),
-			basename(imagePath, ".svg")
-		).split(sep).map((value) => {
-			//Get a camelcase with respect for capitalized parts
-			return value.split(/[-_]/).map((part, i) => i ? upperFirst(part) : part).join("");
-		});
+			basename(imagePath, ".svg"),
+		).split(
+			sep,
+		).map(
+			// Get a camelcase with respect for capitalized parts
+			(value) => value.split(/[-_]/).map((part, i) => i ? upperFirst(part) : part).join(""),
+		);
 	}
 
 	public async generate(): Promise<string> {
@@ -54,13 +56,16 @@ export class TypescriptModelWriter {
 				config: this.config,
 				variantNames: this.deducedVariantNames,
 				serialize: (value: AssetType) => {
-					value = {...value};
-					delete value.path;
+					const data: Omit<AssetType, 'path'> = {name: value.name, svg: value.svg};
+					if (value.variants) {
+						data.variants = value.variants;
+					}
 
 					const serialized = jsesc(
-						value,
-						{compact: false, quotes: "backtick", "indent": '  '}
+						data,
+						{compact: false, quotes: "backtick", "indent": '  '},
 					);
+
 					return serialized.replaceAll(
 						/`(.*?)`(?=:\s{0,1}(?:true|false|null|undefined|[\[{"'`]|[0-9]))/g,
 						(match, key: string) => {
@@ -69,10 +74,10 @@ export class TypescriptModelWriter {
 							return (key.match(/^[a-z0-9_]*$/))
 								? key
 								: JSON.stringify(key);
-						}
+						},
 					);
-				}
-			}
+				},
+			},
 		);
 	}
 }

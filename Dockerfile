@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:20-alpine
 ENV NODE_ENV=development
 
 RUN npm install --global gulp-cli

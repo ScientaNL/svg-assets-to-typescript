@@ -1,10 +1,10 @@
-import { src, dest } from "gulp";
-import * as debug from "gulp-debug";
-import * as plumber from 'gulp-plumber';
-import * as minimist from 'minimist';
-import { resolve, dirname, basename } from 'path';
-import { configLoader } from "./lib/configLoader";
-import { SvgParserPlugin } from "./lib/gulp/SvgParserPlugin";
+import { dest, src } from "gulp";
+import { default as debug } from "gulp-debug";
+import { default as plumber } from 'gulp-plumber';
+import { default as minimist } from 'minimist';
+import { basename, dirname, resolve } from 'path';
+import { configLoader } from "./lib/config-loader";
+import { SvgParserPlugin } from "./lib/gulp/svg-parser-plugin";
 
 const argv = minimist(process.argv);
 
@@ -20,11 +20,11 @@ process.chdir(projectRootPath);
 
 exports.default = () => src(
 	config.inputs.map((input) => `${resolve(projectRootPath, input)}/**/*.svg`),
-	{base: projectRootPath}
+	{base: projectRootPath},
 ).pipe(
-	plumber()
+	plumber(),
 ).pipe(
-	debug({title: "[svg - image]"})
+	debug({title: "[svg - image]"}),
 ).pipe(
 	SvgParserPlugin.create(
 		basename(outputFilePath),
@@ -32,10 +32,10 @@ exports.default = () => src(
 		config.parser,
 		config.variants,
 		config.writer,
-		variants
-	)
+		variants,
+	),
 ).pipe(
-	debug({title: "[ts - model]"})
+	debug({title: "[ts - model]"}),
 ).pipe(
-	dest(dirname(outputFilePath))
+	dest(dirname(outputFilePath)),
 );
