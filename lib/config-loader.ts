@@ -1,12 +1,12 @@
 import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { parse as parseYaml } from "yaml";
-import { ConfigInterface, configValidator } from "./ConfigInterface";
-import { AssetsVariantsInterface, variantListValidator } from "./VariantListInterface";
+import { ConfigInterface, configValidator } from "./config.interface";
+import { AssetsVariantsInterface, variantListValidator } from "./variant-list.interface";
 
 export const configLoader = (
 	configFile: string,
-	projectRootPath: string
+	projectRootPath: string,
 ): { config: ConfigInterface, variants: AssetsVariantsInterface } => {
 	if (!existsSync(configFile)) {
 		throw new Error(`Could not find rcFile '${configFile}'`);
@@ -14,8 +14,8 @@ export const configLoader = (
 
 	const validatedConfig = configValidator.validate(
 		parseYaml(
-			readFileSync(configFile, 'utf-8')
-		)
+			readFileSync(configFile, 'utf-8'),
+		),
 	);
 
 	if (validatedConfig.error instanceof Error) {
@@ -28,7 +28,7 @@ export const configLoader = (
 		config,
 		variants: config.variants
 			? variantsLoader(join(projectRootPath, config.variants.path))
-			: {}
+			: {},
 	};
 };
 
@@ -39,7 +39,7 @@ const variantsLoader = (variantsFile: string): AssetsVariantsInterface => {
 
 	return variantListValidator.validate(
 		parseYaml(
-			readFileSync(variantsFile, 'utf-8')
-		)
+			readFileSync(variantsFile, 'utf-8'),
+		),
 	).value;
 };

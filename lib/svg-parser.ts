@@ -1,6 +1,6 @@
 import { optimize as optimizeSvg } from 'svgo';
-import { ConfigInterface } from "./ConfigInterface";
-import { PluginConfigType, svgFillTransformerPlugin } from './svgo/svgFillTransformerPlugin';
+import { ConfigInterface } from "./config.interface";
+import { PluginConfig, svgFillTransformerPlugin } from './svgo/svg-fill-transformer-plugin';
 
 type ParsedSvgType = { svg: string, defaultVariant: Record<string, string> };
 
@@ -21,13 +21,13 @@ export class SvgParser {
 						params: {
 							"defaultVariant": defaultVariantMap,
 							"cssVariableAttribute": this.config.cssVariableAttribute,
-							"cssVariableRegex": this.config.cssVariableRegex
-						} as PluginConfigType
+							"cssVariableRegex": this.config.cssVariableRegex,
+						} as PluginConfig,
 					} as any, // Too bad typings are not correct
-					...this.config?.svgoPlugins || []
+					...this.config?.svgoPlugins ?? [],
 				],
-				js2svg: this.config?.js2svg
-			}
+				js2svg: this.config?.js2svg,
+			},
 		).data;
 
 		if (!outputSvg) {
@@ -38,7 +38,7 @@ export class SvgParser {
 
 		return {
 			svg: outputSvg,
-			defaultVariant: defaultVariantMap
+			defaultVariant: defaultVariantMap,
 		};
 	}
 }
