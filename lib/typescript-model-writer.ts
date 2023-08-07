@@ -2,6 +2,7 @@ import { renderFile } from 'ejs';
 import { default as jsesc } from 'jsesc';
 import { default as upperFirst } from "lodash.upperfirst";
 import { basename, dirname, join, sep } from "path";
+import { default as File } from "vinyl";
 import { ConfigInterface } from "./config.interface";
 import { VariantsInterface } from "./variant-list.interface";
 
@@ -12,7 +13,7 @@ export class TypescriptModelWriter {
 	private readonly map: AssetMapType = new Map();
 
 	constructor(
-		private readonly templatePath: string,
+		private readonly templatePaths: { assets: string, types: string },
 		private readonly config: ConfigInterface["writer"],
 		private readonly deducedVariantNames: string[],
 	) {
@@ -48,11 +49,41 @@ export class TypescriptModelWriter {
 		);
 	}
 
-	public async generate(): Promise<string> {
+	public async* generate(): AsyncGenerator<File> {
+		if (this.config.mode === 'combineAssets') {
+			yield new File({
+				path: this.config.combinedAssetsFileName,
+				contents: Buffer.from(
+					await this.generateTemplate(this.map, this.templatePaths.assets),
+				),
+			});
+		} else if (this.config.mode === 'filePerAsset') {
+			for (const [file, asset] of this.map.entries()) {
+				yield new File({
+					path: `${file}.ts`,
+					contents: Buffer.from(
+						await this.generateTemplate(new Map([[file, asset]]), this.templatePaths.assets),
+					),
+				});
+			}
+		}
+
+		yield new File({
+			path: this.config.typesFileName,
+			contents: Buffer.from(
+				await this.generateTemplate(this.map, this.templatePaths.types),
+			),
+		});
+	}
+
+	private async generateTemplate(
+		assets: AssetMapType,
+		templatePath: string,
+	): Promise<string> {
 		return await renderFile(
-			this.templatePath,
+			templatePath,
 			{
-				assets: this.map,
+				assets: assets,
 				config: this.config,
 				variantNames: this.deducedVariantNames,
 				serialize: (value: AssetType) => {
@@ -77,6 +108,7 @@ export class TypescriptModelWriter {
 						},
 					);
 				},
+				stripTsExtension: (fileName: string) => fileName.replace(/\.ts$/ig, ""),
 			},
 		);
 	}

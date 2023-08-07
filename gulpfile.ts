@@ -12,7 +12,8 @@ const rcFilePath = resolve(argv.input);
 const projectRootPath = dirname(rcFilePath);
 const outputFilePath = resolve(argv.output);
 
-const modelTemplatePath = resolve("resources/template.ejs");
+const typesTemplatePath = resolve("resources/types.ejs");
+const assetsTemplatePath = resolve("resources/assets.ejs");
 
 const {config, variants} = configLoader(rcFilePath, projectRootPath);
 
@@ -28,7 +29,7 @@ exports.default = () => src(
 ).pipe(
 	SvgParserPlugin.create(
 		basename(outputFilePath),
-		modelTemplatePath,
+		{assets: assetsTemplatePath, types: typesTemplatePath},
 		config.parser,
 		config.variants,
 		config.writer,
