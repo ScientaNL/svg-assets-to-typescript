@@ -1,8 +1,8 @@
-import { red, blue } from "chalk";
+import { blue, red } from "chalk";
 import { warn } from "fancy-log";
+import { Transform } from "stream";
 import { obj, TransformCallback } from "through2";
 import { default as File } from "vinyl";
-import { Transform } from "stream";
 import { ConfigInterface } from "../config.interface";
 import { SvgParser } from "../svg-parser";
 import { TypescriptModelWriter } from "../typescript-model-writer";
@@ -12,7 +12,7 @@ import { VariantsManager } from "../variants-manager";
 export class SvgParserPlugin {
 	public static create(
 		outputPath: string,
-		templatePath: string,
+		templatePaths: { assets: string, types: string },
 		parserConfig: ConfigInterface["parser"],
 		variantsConfig: ConfigInterface["variants"],
 		writerConfig: ConfigInterface["writer"],
@@ -25,7 +25,11 @@ export class SvgParserPlugin {
 			(fileName: string, message: string) => warn(`[svg parser] ${blue(fileName)} - ${red(message)}`),
 		);
 
-		const writer = new TypescriptModelWriter(templatePath, writerConfig, variantsManager.getVariantNames());
+		const writer = new TypescriptModelWriter(
+			templatePaths,
+			writerConfig,
+			variantsManager.getVariantNames(),
+		);
 
 		const plugin = new SvgParserPlugin(svgParser, variantsManager, writer, outputPath);
 
@@ -44,10 +48,9 @@ export class SvgParserPlugin {
 				}
 			},
 			async function(this: Transform, flushCallback: () => void): Promise<void> {
-				const file = await plugin.generate();
-
-				this.push(file);
-
+				for await(const file of plugin.generate()) {
+					this.push(file);
+				}
 				flushCallback();
 			},
 		);
@@ -77,12 +80,11 @@ export class SvgParserPlugin {
 		);
 	};
 
-	public async generate(): Promise<File> {
-		const template = await this.writer.generate();
+	public async* generate(): AsyncGenerator<File> {
+		for await(const file of this.writer.generate()) {
+			file.path = `${this.outputPath}/${file.path}`;
 
-		return new File({
-			path: this.outputPath,
-			contents: Buffer.from(template),
-		});
+			yield file;
+		}
 	}
 }
