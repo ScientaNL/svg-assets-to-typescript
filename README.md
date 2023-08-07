@@ -167,14 +167,8 @@ Checkout this repository and run it 😃
 
 ## Bash
 ```shell
-./svg-assets-to-typescript.sh .svg-assets-to-typescriptrc.yml icons.model.ts
+./svg-assets-to-typescript.sh .svg-assets-to-typescriptrc.yml .
  ```
-
-## Powershell
-For our Windows users
-```powershell
-bin\svg-assets-to-typescript.ps1 C:\project\.svg-assets-to-typescriptrc.yml C:\project\icons.model.ts
-```
 
 # Developing the tool
 - Edit the .env-file according to the template and your paths
@@ -193,5 +187,5 @@ And in the container's terminal:
 
 ```bash
 npm install
-npm run extract --input=/assets/.svg-assets-to-typescriptrc.yml --output=/output/icons.model.ts
+npm run extract --input=/assets/.svg-assets-to-typescriptrc.yml --output=/output
 ```
