@@ -10,6 +10,6 @@ export type { <%- config.assetTypeName %> };
  */
 <%_ assets.forEach(function(asset, constName) { _%>
 // <%= asset.path %>
-export const <%= constName %>: <%- config.assetInterfaceName %> = <%- serialize(asset) %>;
+export const <%= constName %> = <%- serialize(asset) %> as const satisfies <%- config.assetInterfaceName %>;
 
 <% }); _%>
