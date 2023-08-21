@@ -12,7 +12,7 @@ import { VariantsManager } from "../variants-manager";
 export class SvgParserPlugin {
 	public static create(
 		outputPath: string,
-		templatePaths: { assets: string, types: string },
+		templatePaths: { assets: string, types: string, barrel: string },
 		parserConfig: ConfigInterface["parser"],
 		variantsConfig: ConfigInterface["variants"],
 		writerConfig: ConfigInterface["writer"],

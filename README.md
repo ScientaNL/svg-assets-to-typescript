@@ -176,7 +176,7 @@ Checkout this repository and run it 😃
 
 ```bash
 docker-compose -f docker-compose.development.yml up -d --build --force-recreate --remove-orphans
-docker exec -ti svg-assets-to-typescript bash
+docker exec -ti svg-assets-to-typescript sh
 ```
 
 And in the container's terminal:

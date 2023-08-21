@@ -22,9 +22,8 @@ export interface ConfigInterface {
 		assetTypeName: string;
 		assetInterfaceName: string;
 		variantEnumName: string;
-		mode: 'combineAssets' | 'filePerAsset';
-		typesFileName?: string;
-		combinedAssetsFileName?: string;
+		typesFileName: string;
+		barrelFileName: string;
 	}
 }
 
@@ -49,8 +48,7 @@ export const configValidator = Joi.object({
 		assetTypeName: Joi.string().required(),
 		assetInterfaceName: Joi.string().required(),
 		variantEnumName: Joi.string().required(),
-		mode: Joi.string().required().valid('combineAssets', 'filePerAsset'),
-		typesFileName: Joi.string().optional(),
-		combinedAssetsFileName: Joi.string().optional(),
+		typesFileName: Joi.string().required(),
+		barrelFileName: Joi.string().required(),
 	},
 });

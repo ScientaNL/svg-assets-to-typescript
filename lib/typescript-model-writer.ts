@@ -6,14 +6,14 @@ import { default as File } from "vinyl";
 import { ConfigInterface } from "./config.interface";
 import { VariantsInterface } from "./variant-list.interface";
 
-type AssetType = { name: string, path: string, svg: string, variants?: VariantsInterface };
+type AssetType = { name: string, id: string, path: string, svg: string, variants?: VariantsInterface };
 type AssetMapType = Map<string, AssetType>;
 
 export class TypescriptModelWriter {
 	private readonly map: AssetMapType = new Map();
 
 	constructor(
-		private readonly templatePaths: { assets: string, types: string },
+		private readonly templatePaths: { assets: string, types: string, barrel: string },
 		private readonly config: ConfigInterface["writer"],
 		private readonly deducedVariantNames: string[],
 	) {
@@ -21,11 +21,10 @@ export class TypescriptModelWriter {
 
 	public add(imagePath: string, svg: string, variants?: VariantsInterface) {
 		const assetNameParts = TypescriptModelWriter.getImageImageNameParts(imagePath);
-		const assetName = assetNameParts.join("-");
-		const constName = `${this.config.constPrefix}_${assetNameParts.join("_")}`;
 
 		const data: AssetType = {
-			name: assetName,
+			name: assetNameParts.join("-"),
+			id: assetNameParts.join("_"),
 			path: imagePath,
 			svg: svg.trim(),
 		};
@@ -34,7 +33,7 @@ export class TypescriptModelWriter {
 			data.variants = variants;
 		}
 
-		this.map.set(constName, data);
+		this.map.set(`${this.config.constPrefix}_${data.id}`, data);
 	}
 
 	private static getImageImageNameParts(imagePath): string[] {
@@ -50,23 +49,21 @@ export class TypescriptModelWriter {
 	}
 
 	public async* generate(): AsyncGenerator<File> {
-		if (this.config.mode === 'combineAssets') {
+		for (const [file, asset] of this.map.entries()) {
 			yield new File({
-				path: this.config.combinedAssetsFileName,
+				path: `${file}.ts`,
 				contents: Buffer.from(
-					await this.generateTemplate(this.map, this.templatePaths.assets),
+					await this.generateTemplate(new Map([[file, asset]]), this.templatePaths.assets),
 				),
 			});
-		} else if (this.config.mode === 'filePerAsset') {
-			for (const [file, asset] of this.map.entries()) {
-				yield new File({
-					path: `${file}.ts`,
-					contents: Buffer.from(
-						await this.generateTemplate(new Map([[file, asset]]), this.templatePaths.assets),
-					),
-				});
-			}
 		}
+
+		yield new File({
+			path: this.config.barrelFileName,
+			contents: Buffer.from(
+				await this.generateTemplate(this.map, this.templatePaths.barrel),
+			),
+		});
 
 		yield new File({
 			path: this.config.typesFileName,
@@ -87,7 +84,12 @@ export class TypescriptModelWriter {
 				config: this.config,
 				variantNames: this.deducedVariantNames,
 				serialize: (value: AssetType) => {
-					const data: Omit<AssetType, 'path'> = {name: value.name, svg: value.svg};
+					const data: Omit<AssetType, 'path'> = {
+						name: value.name,
+						id: value.id,
+						svg: value.svg,
+					};
+
 					if (value.variants) {
 						data.variants = value.variants;
 					}
