@@ -13,6 +13,7 @@ export type <%- config.assetTypeName %>  =
 
 export interface <%- config.assetInterfaceName %> {
   name: <%- config.assetTypeName %>;
+  id: string;
   svg: string;
   variants?: Partial<Record<<%- config.variantEnumName %>, Record<string, string>>>;
 }

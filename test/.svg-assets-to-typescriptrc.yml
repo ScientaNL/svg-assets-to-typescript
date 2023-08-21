@@ -52,6 +52,5 @@ writer:
   assetTypeName: scaIcon
   assetInterfaceName: ScaIcon
   variantEnumName: ScaIconVariant
-  mode: filePerAsset
   typesFileName: types.model.ts
-  combinedAssetsFileName: icons.model.ts
+  barrelFileName: icons.model.ts
