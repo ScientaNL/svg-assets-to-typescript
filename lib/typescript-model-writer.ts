@@ -6,7 +6,7 @@ import { default as File } from "vinyl";
 import { ConfigInterface } from "./config.interface";
 import { VariantsInterface } from "./variant-list.interface";
 
-type AssetType = { name: string, id: string, path: string, svg: string, variants?: VariantsInterface };
+type AssetType = { name: string, path: string, svg: string, variants?: VariantsInterface };
 type AssetMapType = Map<string, AssetType>;
 
 export class TypescriptModelWriter {
@@ -23,8 +23,7 @@ export class TypescriptModelWriter {
 		const assetNameParts = TypescriptModelWriter.getImageImageNameParts(imagePath);
 
 		const data: AssetType = {
-			name: assetNameParts.join("-"),
-			id: assetNameParts.join("_"),
+			name: assetNameParts.join("_"),
 			path: imagePath,
 			svg: svg.trim(),
 		};
@@ -86,7 +85,6 @@ export class TypescriptModelWriter {
 				serialize: (value: AssetType) => {
 					const data: Omit<AssetType, 'path'> = {
 						name: value.name,
-						id: value.id,
 						svg: value.svg,
 					};
 
