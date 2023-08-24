@@ -49,6 +49,5 @@ parser:
     pretty: false
 writer:
   constPrefix: scaIcon
-  assetTypeName: scaIcon
   assetInterfaceName: ScaIcon
   variantEnumName: ScaIconVariant

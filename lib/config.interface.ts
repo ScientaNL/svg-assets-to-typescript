@@ -19,7 +19,6 @@ export interface ConfigInterface {
 	};
 	writer: {
 		constPrefix: string;
-		assetTypeName: string;
 		assetInterfaceName: string;
 		variantEnumName: string;
 		typesFileName: string;
@@ -45,7 +44,6 @@ export const configValidator = Joi.object({
 	}),
 	writer: {
 		constPrefix: Joi.string().required(),
-		assetTypeName: Joi.string().required(),
 		assetInterfaceName: Joi.string().required(),
 		variantEnumName: Joi.string().required(),
 		typesFileName: Joi.string().required(),
