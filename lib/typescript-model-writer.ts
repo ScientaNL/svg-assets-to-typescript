@@ -32,7 +32,7 @@ export class TypescriptModelWriter {
 			data.variants = variants;
 		}
 
-		this.map.set(`${this.config.constPrefix}_${data.id}`, data);
+		this.map.set(`${this.config.constPrefix}_${data.name}`, data);
 	}
 
 	private static getImageImageNameParts(imagePath): string[] {
