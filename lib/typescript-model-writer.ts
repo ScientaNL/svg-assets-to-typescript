@@ -4,9 +4,8 @@ import { default as upperFirst } from "lodash.upperfirst";
 import { basename, dirname, join, sep } from "path";
 import { default as File } from "vinyl";
 import { ConfigInterface } from "./config.interface";
-import { VariantsInterface } from "./variant-list.interface";
 
-type AssetType = { name: string, path: string, svg: string, variants?: VariantsInterface };
+type AssetType = { name: string, path: string, svg: string };
 type AssetMapType = Map<string, AssetType>;
 
 export class TypescriptModelWriter {
@@ -15,11 +14,10 @@ export class TypescriptModelWriter {
 	constructor(
 		private readonly templatePaths: { assets: string, types: string, barrel: string },
 		private readonly config: ConfigInterface["writer"],
-		private readonly deducedVariantNames: string[],
 	) {
 	}
 
-	public add(imagePath: string, svg: string, variants?: VariantsInterface) {
+	public add(imagePath: string, svg: string) {
 		const assetNameParts = TypescriptModelWriter.getImageImageNameParts(imagePath);
 
 		const data: AssetType = {
@@ -27,10 +25,6 @@ export class TypescriptModelWriter {
 			path: imagePath,
 			svg: svg.trim(),
 		};
-
-		if (variants) {
-			data.variants = variants;
-		}
 
 		this.map.set(`${this.config.constPrefix}_${data.name}`, data);
 	}
@@ -81,16 +75,11 @@ export class TypescriptModelWriter {
 			{
 				assets: assets,
 				config: this.config,
-				variantNames: this.deducedVariantNames,
 				serialize: (value: AssetType) => {
 					const data: Omit<AssetType, 'path'> = {
 						name: value.name,
 						svg: value.svg,
 					};
-
-					if (value.variants) {
-						data.variants = value.variants;
-					}
 
 					const serialized = jsesc(
 						data,
