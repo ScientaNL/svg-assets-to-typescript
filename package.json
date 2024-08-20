@@ -1,7 +1,7 @@
 {
 	"name": "svg-assets-to-typescript",
 	"version": "0.0.1",
-	"description": "Scienta's take on svg assets management in Typescript with support for color variants",
+	"description": "Scienta's take on svg assets management in Typescript",
 	"author": "Scienta",
 	"license": "MIT",
 	"devDependencies": {

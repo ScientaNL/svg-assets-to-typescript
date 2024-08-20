@@ -8,11 +8,4 @@
 export interface <%- config.assetInterfaceName %> {
   name: string;
   svg: string;
-  variants?: Partial<Record<<%- config.variantEnumName %>, Record<string, string>>>;
-}
-
-export enum <%- config.variantEnumName %> {
-	<%_ variantNames.forEach(function(variant){ _%>
-	  <%- variant %> = "<%- variant %>",
-	<%_ }); _%>
 }

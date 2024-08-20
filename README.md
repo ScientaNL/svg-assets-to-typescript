@@ -3,14 +3,13 @@
 Converts SVG files to one tree-shakable typescript definition model, which can be used by a icon library.
 
 Adaptation of the [svg-to-ts](https://github.com/kreuzerk/svg-to-ts) project. The main addition which this project provides for, is an svg
-color variant workflow. With this workflow, it is possible to have one annotated svg and a map of color variants which can be used to render
-a svg in multiple color scheme's and variants using *css variables*.
+coloring workflow. With this workflow, it is possible to have one annotated svg which can be used to render
+a svg using *css variables*.
 
 ## Workflow
 
 - SVG files must be annotated with properties containing the name of a css variable.
 - A *rc-file* must be added to the svg root, containing the configuration.
-- Optionally a *variants file* can be added, containing the color schemes of the variants.
 - Run the tool.
 - Implement the definition model in your application.
 
@@ -52,27 +51,9 @@ variable which must be used. When exported, these layer names are preserved by t
 The icon is optimized by [svgo](https://github.com/svg/svgo) and the colors are substituted with a css-variable having the original color
 set as default. The settings of how to parse annotated svgs are configurable.
 
-## Variants
-
-If you want to use one svg asset to be used in multiple color schemes, you can add a variants file.
-
-**Example variants file:**
-
-```yml
-action/preset.svg:
-  dark: { --main-color: "#ffccff", --secondary-color: "#aaddee" }
-  active: { --main-color: "#eeffcc", --secondary-color: "#22eedd" }
-```
-
-These variant will be added to the definition model file and can be used by an svg component to load the svg with these css variables.
-
-### Mono variants (SVG's currentColor)
-
-You can activate *mono variant* option. This adds for each svg asset a pre-set variant with all the colors on *currentColor*.
-
 ## Definition model
 
-The output of this tool is a definition model with a constant for each converted svg asset and it's variants. The typings can be configured
+The output of this tool is a definition model with a constant for each converted svg asset. The typings can be configured
 in the configuration rc file.
 
 ** Example Typescript definition model file:**
@@ -83,16 +64,6 @@ in the configuration rc file.
 export const scaIcon_action_preset: ScaIcon = {
   name: `action-preset`,
   svg: `<svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2"><path style="fill:none;fill-rule:nonzero" d="M0 0h18v18H0z"/><path style="fill:var(--secondary-color,#aaa)" d="M1.029 2h16v2h-16zm0 6h16v2h-16zm0 6h16v2h-16z"/><path style="fill:var(--main-color,#333)" d="M13.029 1h2v4h-2zm-9 6h2v4h-2zm6 6h2v4h-2z"/></svg>`,
-  variants: {
-    dark: {
-      "--secondary-color": `#333`,
-      "--main-color": `#aaa`
-    },
-    mono: {
-      "--secondary-color": `currentColor`,
-      "--main-color": `currentColor`
-    }
-  }
 };
 
 // ... All other converted files
@@ -106,11 +77,6 @@ export type scaIcon =
 export interface ScaIcon {
   name: string;
   svg: string;
-  variants?: Record<string, ScaIconVariant>
-}
-
-export interface ScaIconVariant {
-  [key: string]: string;
 }
 ```
 
@@ -125,15 +91,6 @@ The main config can be configured in a rc yml file. This file must be specified 
 ```typescript
 interface ConfigInterface {
   inputs: string[]; // One ore more input paths locating the SVGs
-  variants?: { //Optional, when utilizing asset variants
-    path: string; // Path of the variants definition yml
-    autoAddMonoVariant: boolean; // Automatically add a mono variant to each asset
-    monoVariantName: string // Name of the mono variant variant
-    monoVariableMap: { // The names of variables and the value it must get as a mono variant
-      default: string,
-      [key: string]: string,
-    },
-  },
   parser: {
     cssVariableAttribute: string; //Name of the aattribute in which the css variable name is annotated to
     cssVariableRegex: string; // Regex to fetch the variable
@@ -143,21 +100,8 @@ interface ConfigInterface {
   writer: {
     constPrefix: string; // Name of the constant prefix to use in the definition model
     assetInterfaceName: string; // Name of the Typescript asset interface which will be generated
-    variantEnumName: string; //Name of the Typescript variant type which will be generated
   }
 }
-```
-
-### variants.yml
-If you want to use a variants file. Enable the option in the rc file and create a variants map. The key of the svg asset must be the relative path to the configured **input** of the asset.
-
-**Variants yml schema:**
-```yml
-action/preset.svg: // Relative path of the svg asset
-  dark: { //Name of the variant
-    --main-color: "#ffccff", // Map of css variables and the associated colors
-    --secondary-color: "#aaddee"
-  }
 ```
 
 ## Running the tool

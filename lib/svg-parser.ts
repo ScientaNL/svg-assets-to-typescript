@@ -2,15 +2,13 @@ import { optimize as optimizeSvg } from 'svgo';
 import { ConfigInterface } from "./config.interface";
 import { PluginConfig, svgFillTransformerPlugin } from './svgo/svg-fill-transformer-plugin';
 
-type ParsedSvgType = { svg: string, defaultVariant: Record<string, string> };
+type ParsedSvgType = { svg: string };
 
 export class SvgParser {
 	constructor(private readonly config: ConfigInterface["parser"]) {
 	}
 
 	public parseImage(inputSvg: string): ParsedSvgType {
-		const defaultVariantMap = {};
-
 		const outputSvg = optimizeSvg(
 			inputSvg,
 			{
@@ -19,7 +17,6 @@ export class SvgParser {
 					{
 						...svgFillTransformerPlugin,
 						params: {
-							"defaultVariant": defaultVariantMap,
 							"cssVariableAttribute": this.config.cssVariableAttribute,
 							"cssVariableRegex": this.config.cssVariableRegex,
 						} as PluginConfig,
@@ -38,7 +35,6 @@ export class SvgParser {
 
 		return {
 			svg: outputSvg,
-			defaultVariant: defaultVariantMap,
 		};
 	}
 }

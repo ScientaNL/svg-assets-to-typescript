@@ -1,37 +1,25 @@
-import { blue, red } from "chalk";
-import { warn } from "fancy-log";
 import { Transform } from "stream";
 import { obj, TransformCallback } from "through2";
 import { default as File } from "vinyl";
 import { ConfigInterface } from "../config.interface";
 import { SvgParser } from "../svg-parser";
 import { TypescriptModelWriter } from "../typescript-model-writer";
-import { AssetsVariantsInterface } from "../variant-list.interface";
-import { VariantsManager } from "../variants-manager";
 
 export class SvgParserPlugin {
 	public static create(
 		outputPath: string,
 		templatePaths: { assets: string, types: string, barrel: string },
 		parserConfig: ConfigInterface["parser"],
-		variantsConfig: ConfigInterface["variants"],
 		writerConfig: ConfigInterface["writer"],
-		variants: AssetsVariantsInterface,
 	): Transform {
 		const svgParser = new SvgParser(parserConfig);
-		const variantsManager = new VariantsManager(
-			variantsConfig,
-			variants,
-			(fileName: string, message: string) => warn(`[svg parser] ${blue(fileName)} - ${red(message)}`),
-		);
 
 		const writer = new TypescriptModelWriter(
 			templatePaths,
 			writerConfig,
-			variantsManager.getVariantNames(),
 		);
 
-		const plugin = new SvgParserPlugin(svgParser, variantsManager, writer, outputPath);
+		const plugin = new SvgParserPlugin(svgParser, writer, outputPath);
 
 		return obj(
 			(file: File, enc: BufferEncoding, callback: TransformCallback): void => {
@@ -58,7 +46,6 @@ export class SvgParserPlugin {
 
 	private constructor(
 		private readonly svgParser: SvgParser,
-		private readonly variantsManager: VariantsManager,
 		private readonly writer: TypescriptModelWriter,
 		private readonly outputPath: string,
 	) {
@@ -76,7 +63,6 @@ export class SvgParserPlugin {
 		this.writer.add(
 			file.relative,
 			parsedSvg.svg,
-			this.variantsManager.getProcessedVariants(file.relative, parsedSvg.defaultVariant) ?? undefined,
 		);
 	};
 

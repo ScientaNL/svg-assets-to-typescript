@@ -1,12 +1,5 @@
 inputs:
   - .
-variants:
-  path: .icon-variants.yml
-  autoAddMonoVariant: true
-  monoVariantName: mono
-  monoVariableMap:
-    default: currentColor
-    --background: transparent
 parser:
   cssVariableAttribute: serif:id
   cssVariableRegex: (--[a-z0-9-_]+)\b
@@ -50,6 +43,5 @@ parser:
 writer:
   constPrefix: scaIcon
   assetInterfaceName: ScaIcon
-  variantEnumName: ScaIconVariant
   typesFileName: types.model.ts
   barrelFileName: icons.model.ts
