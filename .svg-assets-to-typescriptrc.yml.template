@@ -1,14 +1,17 @@
 inputs:
   - .
 parser:
-  cssVariableAttribute: serif:id
+  cssVariableAttribute: affinity:id
   cssVariableRegex: (--[a-z0-9-_]+)\b
   svgoPlugins:
     - removeDoctype
     - removeXMLProcInst
     - removeComments
     - removeMetadata
-    - removeEditorsNSData
+    - name: removeEditorsNSData
+      params:
+        additionalNamespaces:
+          - https://www.affinity.studio/
     - cleanupAttrs
     - mergeStyles
     - inlineStyles

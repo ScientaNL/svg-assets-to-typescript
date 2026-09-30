@@ -94,7 +94,7 @@ interface ConfigInterface {
   parser: {
     cssVariableAttribute: string; //Name of the aattribute in which the css variable name is annotated to
     cssVariableRegex: string; // Regex to fetch the variable
-    svgoPlugins?: string[]; // List of svgo plugins to use
+    svgoPlugins?: (string | { name: string; params?: Record<string, unknown> })[]; // List of svgo plugins to use, by name or by name with params
     js2svg: Record<string, any> // js2svg settings
   };
   writer: {

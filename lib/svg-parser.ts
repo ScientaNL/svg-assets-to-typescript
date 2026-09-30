@@ -1,4 +1,4 @@
-import { optimize as optimizeSvg } from 'svgo';
+import { type Config as SvgoConfig, optimize as optimizeSvg } from 'svgo';
 import { ConfigInterface } from "./config.interface";
 import { PluginConfig, svgFillTransformerPlugin } from './svgo/svg-fill-transformer-plugin';
 
@@ -21,7 +21,8 @@ export class SvgParser {
 							"cssVariableRegex": this.config.cssVariableRegex,
 						} as PluginConfig,
 					} as any, // Too bad typings are not correct
-					...this.config?.svgoPlugins ?? [],
+					// svgo validates the plugin names and params itself when it runs
+					...(this.config?.svgoPlugins ?? []) as NonNullable<SvgoConfig['plugins']>,
 				],
 				js2svg: this.config?.js2svg,
 			},
